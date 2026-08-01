@@ -13,33 +13,48 @@
             overflow: hidden; 
             background-color: #000000; 
         }
-        /* Forces the Ruffle player object to scale correctly on the webpage */
+        #flash-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         ruffle-player {
-            width: 100% !important;
-            height: 100% !important;
+            width: 800px !important;
+            height: 600px !important;
         }
     </style>
-    <script src="https://unpkg.com"></script>
+    <!-- Switching from unpkg to cdnjs to pull the latest nightly polyfills -->
+    <script src="https://cloudflare.com"></script>
 </head>
 <body>
 
+    <div id="flash-container"></div>
+
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
+        window.RufflePlayer.config = {
+            allowScriptAccess: true,
+            autoplay: "on",
+            unmuteOverlay: "hidden",
+            backgroundColor: "#000000",
+            letterbox: "on",
+            warnOnUnsupportedContent: false
+        };
+
         window.addEventListener("load", (event) => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
+            const container = document.getElementById("flash-container");
+            container.appendChild(player);
 
-            // Replaces body contents with the direct Ruffle window object
-            document.body.appendChild(player);
-
-            // Configures advanced emulation settings to resolve the asset freeze
-            player.config = {
-                autoplay: "on",
-                unmuteOverlay: "hidden",
-                letterbox: "on"
-            };
-
-            player.load("CoverOrangeLP_v13k.swf"); 
+            // Force rendering standard bounds before pulling the SWF
+            player.load({
+                url: "CoverOrangeLP_v13k.swf",
+                parameters: {},
+                allowScriptAccess: true
+            });
         });
     </script>
 
