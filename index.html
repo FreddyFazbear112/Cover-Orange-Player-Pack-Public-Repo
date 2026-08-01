@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cover Orange: Players Pack</title>
+    <title>Cover Orange Player Pack</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #0b0c10; }
-        #flash-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+        #flash-container { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
+    <!-- This is where your Flash file will display -->
     <div id="flash-container"></div>
 
-    <!-- Inject the modern browser emulator -->
+    <!-- Load the Ruffle Emulator from a free public CDN -->
     <script src="https://unpkg.com"></script>
 
     <script>
@@ -24,11 +25,8 @@
             const container = document.getElementById("flash-container");
             container.appendChild(player);
 
-            player.load({
-                // Linked to your specific file name
-                url: "CoverOrangeLP_v13k.swf", 
-                allowScriptAccess: true
-            });
+            // This path points directly to your specific file on GitHub Pages
+            player.load("https://github.io"/); 
         });
     </script>
 
