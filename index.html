@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cover Orange Player Pack</title>
     <style>
-        /* This makes the game fit perfectly on your screen with a clean black background */
         body, html { 
             margin: 0; 
             padding: 0; 
@@ -14,35 +13,33 @@
             overflow: hidden; 
             background-color: #000000; 
         }
-        #flash-container { 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+        /* Forces the Ruffle player object to scale correctly on the webpage */
+        ruffle-player {
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
-    <!-- Loads the Ruffle Emulator so modern browsers can run the game without Flash Player -->
     <script src="https://unpkg.com"></script>
 </head>
 <body>
-
-    <div id="flash-container"></div>
 
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
         window.addEventListener("load", (event) => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
-            const container = document.getElementById("flash-container");
-            container.appendChild(player);
 
-            // Points directly to your exact file name in the repository
+            // Replaces body contents with the direct Ruffle window object
+            document.body.appendChild(player);
+
+            // Configures advanced emulation settings to resolve the asset freeze
+            player.config = {
+                autoplay: "on",
+                unmuteOverlay: "hidden",
+                letterbox: "on"
+            };
+
             player.load("CoverOrangeLP_v13k.swf"); 
-
-            // Sets the game canvas size (Adjust these numbers if the game looks too small or big)
-            player.style.width = "800px";
-            player.style.height = "600px";
         });
     </script>
 
