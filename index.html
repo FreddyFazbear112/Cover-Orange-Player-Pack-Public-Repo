@@ -27,7 +27,38 @@
             max-height: 600px;
         }
     </style>
-    <!-- Loads Ruffle locally from your own repo, completely destroying the CORS error -->
+    
+    <!-- STEP 1: Define the mock Kongregate API BEFORE Ruffle loads -->
+    <script>
+        // Define the namespace and function exactly as Cover Orange expects
+        window.kongregate = {
+            stats: {
+                submit: function(statName, value) {
+                    // Optional: Log to console to verify the trigger
+                    console.log('Kongregate API called:', statName, value);
+                    
+                    // Detect level completion (common stat names: "level", "stage", or just the call itself)
+                    // You can add specific logic here if the game passes specific level IDs
+                    if (statName === 'level' || statName === 'stage' || statName === 'levels_beaten') {
+                        window.parent.postMessage('levelComplete', '*');
+                    } else {
+                        // Fallback: If the game calls submit() without args or generic success
+                        window.parent.postMessage('levelComplete', '*');
+                    }
+                }
+            },
+            // Mock other common Kongregate API methods to prevent errors
+            api: {
+                setSession: function() {},
+                getGameAuthToken: function() { return "mock_token"; }
+            },
+            registration: {
+                login: function() {}
+            }
+        };
+    </script>
+
+    <!-- Loads Ruffle locally -->
     <script src="ruffle.js"></script>
 </head>
 <body>
@@ -37,7 +68,7 @@
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
-            allowScriptAccess: true,
+            allowScriptAccess: true, // Required for ExternalInterface to work
             autoplay: "on",
             unmuteOverlay: "hidden",
             letterbox: "on"
@@ -49,11 +80,14 @@
             const container = document.getElementById("flash-container");
             container.appendChild(player);
 
-            player.load("CoverOrangeLP_v13k.swf").catch((err) => {
+            player.load({
+                url: "CoverOrangeLP_v13k.swf",
+                allowScriptAccess: true // Ensure this is passed in the load call as well
+            }).catch((err) => {
                 console.error("Loading error:", err);
             });
         });
     </script>
 
 </body>
-</html>
+</html>   
