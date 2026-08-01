@@ -5,17 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cover Orange Player Pack</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; display: flex; justify-content: center; align-items: center; }
-        #waflash-container { width: 100%; height: 100%; max-width: 800px; max-height: 600px; aspect-ratio: 4/3; }
-        iframe { width: 100%; height: 100%; border: none; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+        #flash-container { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <!-- This securely frames a highly stable AS3 engine directly feeding your file -->
-    <div id="waflash-container">
-        <iframe src="https://github.io"></iframe>
-    </div>
+    <div id="flash-container"></div>
+
+    <!-- Load Ruffle Engine -->
+    <script src="https://unpkg.com"></script>
+
+    <script>
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.RufflePlayer.config = {
+            "allowScriptAccess": true,
+            "letterbox": "on",
+            "polyfills": ["static-content", "plugin-detect", "dynamic-content"]
+        };
+
+        window.addEventListener("load", (event) => {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById("flash-container");
+            container.appendChild(player);
+
+            // CORRECT FILENAME WITH STRICT CASE-SENSITIVITY
+            player.load("./CoverOrangeLP_v13k.swf"); 
+        });
+    </script>
 
 </body>
 </html>
