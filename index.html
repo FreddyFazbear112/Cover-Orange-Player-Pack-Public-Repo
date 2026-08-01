@@ -21,39 +21,40 @@
             align-items: center;
         }
         ruffle-player {
-            width: 800px !important;
-            height: 600px !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 800px;
+            max-height: 600px;
         }
     </style>
-    <!-- Switching from unpkg to cdnjs to pull the latest nightly polyfills -->
-    <script src="https://cloudflare.com"></script>
+    <!-- Loads the standalone Ruffle polyfill library -->
+    <script src="https://unpkg.com"></script>
 </head>
 <body>
 
     <div id="flash-container"></div>
 
     <script>
+        // Force the browser to bypass local security checks for the SWF container
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
             allowScriptAccess: true,
             autoplay: "on",
             unmuteOverlay: "hidden",
-            backgroundColor: "#000000",
             letterbox: "on",
-            warnOnUnsupportedContent: false
+            forceScale: true,
+            forceAlign: true
         };
 
-        window.addEventListener("load", (event) => {
+        window.addEventListener("DOMContentLoaded", () => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             const container = document.getElementById("flash-container");
             container.appendChild(player);
 
-            // Force rendering standard bounds before pulling the SWF
-            player.load({
-                url: "CoverOrangeLP_v13k.swf",
-                parameters: {},
-                allowScriptAccess: true
+            // Loads the source directly into the polyfilled container window
+            player.load("CoverOrangeLP_v13k.swf").catch((err) => {
+                console.error("Ruffle failed to load SWF file assets:", err);
             });
         });
     </script>
