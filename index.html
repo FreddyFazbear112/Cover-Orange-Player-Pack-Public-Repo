@@ -27,40 +27,32 @@
             max-height: 600px;
         }
     </style>
+    <!-- Loads Ruffle locally from your own repo, completely destroying the CORS error -->
+    <script src="ruffle.js"></script>
 </head>
 <body>
 
     <div id="flash-container"></div>
 
     <script>
-        // Directly inject Ruffle configurations into the browser runtime
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
             allowScriptAccess: true,
             autoplay: "on",
             unmuteOverlay: "hidden",
-            letterbox: "on",
-            openUrlMode: "confirm",
-            upgradeToHttps: true
+            letterbox: "on"
         };
 
-        // Dynamically append the polyfill directly to force GitHub's cache bypass
-        const script = document.createElement("script");
-        script.src = "https://unpkg.com/";
-        script.crossOrigin = "anonymous";
-        script.onload = () => {
+        window.addEventListener("DOMContentLoaded", () => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             const container = document.getElementById("flash-container");
             container.appendChild(player);
 
-            // Appends a cache-busting timestamp identifier to the target URL
-            const cacheBuster = "?t=" + new Date().getTime();
-            player.load("CoverOrangeLP_v13k.swf" + cacheBuster).catch((err) => {
-                console.error("Ruffle core initialization error: ", err);
+            player.load("CoverOrangeLP_v13k.swf").catch((err) => {
+                console.error("Loading error:", err);
             });
-        };
-        document.head.appendChild(script);
+        });
     </script>
 
 </body>
