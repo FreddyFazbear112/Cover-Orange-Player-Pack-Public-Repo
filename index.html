@@ -6,29 +6,16 @@
     <title>Cover Orange Player Pack</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
-        #flash-container { width: 100%; height: 100%; }
+        #game-container { width: 100%; height: 100%; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <!-- This is where your Flash file will display -->
-    <div id="flash-container"></div>
-
-    <!-- Load the Ruffle Emulator from a free public CDN -->
-    <script src="https://unpkg.com"></script>
-
-    <script>
-        window.RufflePlayer = window.RufflePlayer || {};
-        window.addEventListener("load", (event) => {
-            const ruffle = window.RufflePlayer.newest();
-            const player = ruffle.createPlayer();
-            const container = document.getElementById("flash-container");
-            container.appendChild(player);
-
-            // This path points directly to your specific file on GitHub Pages
-            player.load("https://github.io"/); 
-        });
-    </script>
+    <!-- Uses an optimized, free cloud loader for ActionScript 3 games -->
+    <div id="game-container">
+        <iframe src="https://github.io"></iframe>
+    </div>
 
 </body>
 </html>
