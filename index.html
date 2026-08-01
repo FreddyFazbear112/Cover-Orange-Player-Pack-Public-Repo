@@ -27,36 +27,40 @@
             max-height: 600px;
         }
     </style>
-    <!-- Loads the standalone Ruffle polyfill library -->
-    <script src="https://unpkg.com"></script>
 </head>
 <body>
 
     <div id="flash-container"></div>
 
     <script>
-        // Force the browser to bypass local security checks for the SWF container
+        // Directly inject Ruffle configurations into the browser runtime
         window.RufflePlayer = window.RufflePlayer || {};
         window.RufflePlayer.config = {
             allowScriptAccess: true,
             autoplay: "on",
             unmuteOverlay: "hidden",
             letterbox: "on",
-            forceScale: true,
-            forceAlign: true
+            openUrlMode: "confirm",
+            upgradeToHttps: true
         };
 
-        window.addEventListener("DOMContentLoaded", () => {
+        // Dynamically append the polyfill directly to force GitHub's cache bypass
+        const script = document.createElement("script");
+        script.src = "https://unpkg.com/";
+        script.crossOrigin = "anonymous";
+        script.onload = () => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
             const container = document.getElementById("flash-container");
             container.appendChild(player);
 
-            // Loads the source directly into the polyfilled container window
-            player.load("CoverOrangeLP_v13k.swf").catch((err) => {
-                console.error("Ruffle failed to load SWF file assets:", err);
+            // Appends a cache-busting timestamp identifier to the target URL
+            const cacheBuster = "?t=" + new Date().getTime();
+            player.load("CoverOrangeLP_v13k.swf" + cacheBuster).catch((err) => {
+                console.error("Ruffle core initialization error: ", err);
             });
-        });
+        };
+        document.head.appendChild(script);
     </script>
 
 </body>
